@@ -275,9 +275,13 @@ export const adminAPI = {
   getPayments: (params) => api.get('/admin/payments', params),
   getPayouts: (params) => api.get('/admin/payouts', params),
   processPayout: (data) => api.post('/admin/payouts', data),
-  getRefunds: (params) => api.get('/admin/refunds', params),
-  approveRefund: (id) => api.post(`/admin/refunds/${id}/approve`),
-  processRefund: (id, data) => api.post(`/admin/payments/${id}/refund`, data),
+  getRefunds: (params) => api.get('/refunds', params),
+  approveRefund: (id) => api.post(`/refunds/${id}/process-full`),
+  rejectRefund: (id, reason) => api.post(`/refunds/${id}/reject`, { reason }),
+  processRefund: (id, data) => api.post(`/refunds/${id}/process-full`, data),
+  processPartialRefund: (id, data) => api.post(`/refunds/${id}/process-partial`, data),
+  issueGoodwillRefund: (data) => api.post('/refunds/goodwill', data),
+  getRefundAnalytics: (params) => api.get('/refunds/analytics', params),
   
   // Stripe Admin Payment System
   getStripePayments: async (params) => {
@@ -477,7 +481,14 @@ export const managerAPI = {
   getReturnDetails: (id) => api.get(`/manager/returns/${id}`),
   approveReturn: (id, data) => api.post(`/manager/returns/${id}/approve`, data),
   rejectReturn: (id, data) => api.post(`/manager/returns/${id}/reject`, data),
-  
+
+  // Replacements (manager perspective - approve/reject/analytics)
+  getReplacements: (params) => api.get('/replacements', params),
+  getReplacement: (id) => api.get(`/replacements/${id}`),
+  approveReplacement: (id) => api.put(`/replacements/${id}/approve`),
+  rejectReplacement: (id, reason) => api.put(`/replacements/${id}/reject`, { reason }),
+  getReplacementAnalytics: (params) => api.get('/replacements/analytics', params),
+
   // Disputes
   getDisputes: (params) => api.get('/manager/disputes', params),
   getDisputeDetails: (id) => api.get(`/manager/disputes/${id}`),
@@ -485,9 +496,15 @@ export const managerAPI = {
   escalateDispute: (id, data) => api.post(`/manager/disputes/${id}/escalate`, data),
   
   // Refunds
-  getPendingRefunds: (params) => api.get('/manager/refunds/pending', params),
-  getRefundDetails: (id) => api.get(`/manager/refunds/${id}`),
-  processRefund: (id, data) => api.post(`/manager/refunds/${id}/process`, data),
+  getPendingRefunds: (params) => api.get('/refunds', { ...params, status: 'pending' }),
+  getRefundDetails: (id) => api.get(`/refunds/${id}`),
+  getAllRefunds: (params) => api.get('/refunds', params),
+  processRefund: (id, data) => api.post(`/refunds/${id}/process-full`, data),
+  processPartialRefund: (id, data) => api.post(`/refunds/${id}/process-partial`, data),
+  processFullRefund: (id) => api.post(`/refunds/${id}/process-full`),
+  rejectRefund: (id, reason) => api.post(`/refunds/${id}/reject`, { reason }),
+  issueGoodwillRefund: (data) => api.post('/refunds/goodwill', data),
+  getRefundAnalytics: (params) => api.get('/refunds/analytics', params),
   
   // Support Tickets
   getSupportTickets: (params) => api.get('/manager/support/tickets', params),
@@ -575,6 +592,12 @@ export const sellerAPI = {
   getReturns: (params) => api.get('/seller/returns', params),
   approveReturn: (id) => api.put(`/seller/returns/${id}/approve`),
   rejectReturn: (id, reason) => api.put(`/seller/returns/${id}/reject`, { reason }),
+
+  // Replacements (seller perspective)
+  getReplacements: (params) => api.get('/replacements', params),
+  getReplacement: (id) => api.get(`/replacements/${id}`),
+  updateReplacementShipment: (id, data) => api.put(`/replacements/${id}/shipment`, data),
+  confirmReturnReceived: (id) => api.put(`/replacements/${id}/confirm-return`),
   
   // Financial
   getPayouts: (params) => api.get('/seller/payouts', params),
@@ -658,6 +681,19 @@ export const customerAPI = {
   getReturn: (id) => api.get(`/returns/${id}`),
   getReturnsByOrder: (orderId) => api.get(`/returns/order/${orderId}`),
   createReturn: (data) => api.post('/returns', data),
+
+  // Replacements
+  getReplacements: (params) => api.get('/replacements', params),
+  getReplacement: (id) => api.get(`/replacements/${id}`),
+  createReplacement: (data) => api.post('/replacements', data),
+  updateReturnTracking: (id, tracking_number) =>
+    api.put(`/replacements/${id}/return-tracking`, { return_tracking_number: tracking_number }),
+  cancelReplacement: (id) => api.put(`/replacements/${id}/cancel`),
+
+  // Refunds
+  getRefunds: (params) => api.get('/refunds', params),
+  getRefund: (id) => api.get(`/refunds/${id}`),
+  createRefund: (data) => api.post('/refunds', data),
   
   // Wishlist
   getWishlist: () => api.get('/wishlist'),

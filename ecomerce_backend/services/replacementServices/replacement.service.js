@@ -432,12 +432,227 @@ async function reserveReplacementInventory(requestId) {
   }
 }
 
+/**
+ * Get replacements for a specific customer
+ * @param {String} customerId - Customer UUID
+ * @param {Object} filters - status, page, limit
+ * @returns {Promise<Object>} Paginated list
+ */
+async function getCustomerReplacements(customerId, filters = {}) {
+  const { status, page = 1, limit = 20 } = filters;
+  const offset = (page - 1) * limit;
+
+  let query = supabase
+    .from('replacement_requests')
+    .select(`
+      *,
+      product:products(id, title, image_url, price),
+      variant:product_variants(id, variant_name, sku),
+      shipment:replacement_shipments(*)
+    `, { count: 'exact' })
+    .eq('customer_id', customerId);
+
+  if (status) query = query.eq('status', status);
+
+  const { data, error, count } = await query
+    .order('created_at', { ascending: false })
+    .range(offset, offset + limit - 1);
+
+  if (error) throw error;
+
+  return {
+    replacements: data || [],
+    pagination: {
+      page,
+      limit,
+      total: count,
+      totalPages: Math.ceil((count || 0) / limit)
+    }
+  };
+}
+
+/**
+ * Get replacements for a specific seller
+ * @param {String} sellerId - Seller UUID
+ * @param {Object} filters - status, page, limit
+ * @returns {Promise<Object>} Paginated list
+ */
+async function getSellerReplacements(sellerId, filters = {}) {
+  const { status, page = 1, limit = 20 } = filters;
+  const offset = (page - 1) * limit;
+
+  let query = supabase
+    .from('replacement_requests')
+    .select(`
+      *,
+      product:products(id, title, image_url, price),
+      variant:product_variants(id, variant_name, sku),
+      customer:users!replacement_requests_customer_id_fkey(id, full_name, email),
+      shipment:replacement_shipments(*)
+    `, { count: 'exact' })
+    .eq('seller_id', sellerId);
+
+  if (status) query = query.eq('status', status);
+
+  const { data, error, count } = await query
+    .order('created_at', { ascending: false })
+    .range(offset, offset + limit - 1);
+
+  if (error) throw error;
+
+  return {
+    replacements: data || [],
+    pagination: {
+      page,
+      limit,
+      total: count,
+      totalPages: Math.ceil((count || 0) / limit)
+    }
+  };
+}
+
+/**
+ * Get all replacement requests (Manager/Admin)
+ * @param {Object} filters - status, sellerId, startDate, endDate, page, limit
+ * @returns {Promise<Object>} Paginated list
+ */
+async function getAllReplacements(filters = {}) {
+  const { status, sellerId, startDate, endDate, page = 1, limit = 20 } = filters;
+  const offset = (page - 1) * limit;
+
+  let query = supabase
+    .from('replacement_requests')
+    .select(`
+      *,
+      product:products(id, title, image_url, price),
+      variant:product_variants(id, variant_name, sku),
+      customer:users!replacement_requests_customer_id_fkey(id, full_name, email),
+      seller:users!replacement_requests_seller_id_fkey(id, full_name, email),
+      shipment:replacement_shipments(*)
+    `, { count: 'exact' });
+
+  if (status) query = query.eq('status', status);
+  if (sellerId) query = query.eq('seller_id', sellerId);
+  if (startDate) query = query.gte('created_at', startDate);
+  if (endDate) query = query.lte('created_at', endDate);
+
+  const { data, error, count } = await query
+    .order('created_at', { ascending: false })
+    .range(offset, offset + limit - 1);
+
+  if (error) throw error;
+
+  return {
+    replacements: data || [],
+    pagination: {
+      page,
+      limit,
+      total: count,
+      totalPages: Math.ceil((count || 0) / limit)
+    }
+  };
+}
+
+/**
+ * Update return tracking number (Customer submits tracking for their return shipment)
+ * @param {String} requestId - Request UUID
+ * @param {String} customerId - Customer UUID
+ * @param {String} trackingNumber - Return tracking number
+ * @returns {Promise<Object>} Updated replacement request
+ */
+async function updateReturnTracking(requestId, customerId, trackingNumber) {
+  // Get replacement request
+  const replacement = await getReplacementRequest(requestId);
+
+  if (!replacement) {
+    throw new Error('Replacement request not found');
+  }
+
+  // Verify customer owns this request
+  if (replacement.customer_id !== customerId) {
+    throw new Error('Not authorized to update this replacement request');
+  }
+
+  // Must be approved before customer ships return
+  if (replacement.status !== 'approved') {
+    throw new Error('Replacement must be approved before providing return tracking');
+  }
+
+  const { data, error } = await supabase
+    .from('replacement_requests')
+    .update({
+      return_tracking_number: trackingNumber,
+      updated_at: new Date().toISOString()
+    })
+    .eq('id', requestId)
+    .select(`
+      *,
+      product:products(id, title, image_url),
+      customer:users!replacement_requests_customer_id_fkey(id, full_name, email),
+      seller:users!replacement_requests_seller_id_fkey(id, full_name, email)
+    `)
+    .single();
+
+  if (error) throw error;
+
+  return data;
+}
+
+/**
+ * Confirm return received by seller
+ * @param {String} requestId - Request UUID
+ * @param {String} sellerId - Seller UUID
+ * @returns {Promise<Object>} Updated replacement request
+ */
+async function confirmReturnReceived(requestId, sellerId) {
+  // Get replacement request
+  const replacement = await getReplacementRequest(requestId);
+
+  if (!replacement) {
+    throw new Error('Replacement request not found');
+  }
+
+  // Verify seller owns this request
+  if (replacement.seller_id !== sellerId) {
+    throw new Error('Not authorized to confirm return for this replacement request');
+  }
+
+  // Must be approved or shipped status
+  if (!['approved', 'shipped'].includes(replacement.status)) {
+    throw new Error(`Cannot confirm return for replacement with status: ${replacement.status}`);
+  }
+
+  const { data, error } = await supabase
+    .from('replacement_requests')
+    .update({
+      return_received_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    })
+    .eq('id', requestId)
+    .select(`
+      *,
+      product:products(id, title, image_url),
+      customer:users!replacement_requests_customer_id_fkey(id, full_name, email),
+      seller:users!replacement_requests_seller_id_fkey(id, full_name, email)
+    `)
+    .single();
+
+  if (error) throw error;
+
+  return data;
+}
+
 module.exports = {
   createReplacementRequest,
   getReplacementRequest,
+  getCustomerReplacements,
+  getSellerReplacements,
+  getAllReplacements,
   approveReplacement,
   rejectReplacement,
   updateReplacementShipment,
+  updateReturnTracking,
+  confirmReturnReceived,
   getReplacementAnalytics,
   reserveReplacementInventory
 };

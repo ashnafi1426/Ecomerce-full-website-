@@ -119,22 +119,23 @@ class ReplacementController {
     try {
       const userId = req.user.id;
       const userRole = req.user.role;
-      const { status, page = 1, limit = 20 } = req.query;
+      const { status, sellerId, startDate, endDate, page = 1, limit = 20 } = req.query;
 
-      const filters = { status, page: parseInt(page), limit: parseInt(limit) };
+      const filters = { status, sellerId, startDate, endDate, page: parseInt(page), limit: parseInt(limit) };
 
-      let replacements;
+      let result;
       if (userRole === 'customer') {
-        replacements = await replacementService.getCustomerReplacements(userId, filters);
+        result = await replacementService.getCustomerReplacements(userId, filters);
       } else if (userRole === 'seller') {
-        replacements = await replacementService.getSellerReplacements(userId, filters);
+        result = await replacementService.getSellerReplacements(userId, filters);
       } else {
-        replacements = await replacementService.getAllReplacements(filters);
+        result = await replacementService.getAllReplacements(filters);
       }
 
       res.status(200).json({
         success: true,
-        data: replacements
+        data: result.replacements,
+        pagination: result.pagination
       });
     } catch (error) {
       console.error('Error in getReplacementRequests controller:', error);
@@ -148,7 +149,7 @@ class ReplacementController {
   /**
    * Approve replacement request
    * PUT /api/v1/replacements/:id/approve
-   * @access Manager
+   * @access Manager/Admin
    */
   async approveReplacement(req, res) {
     try {
@@ -174,7 +175,7 @@ class ReplacementController {
   /**
    * Reject replacement request
    * PUT /api/v1/replacements/:id/reject
-   * @access Manager
+   * @access Manager/Admin
    */
   async rejectReplacement(req, res) {
     try {
@@ -218,6 +219,7 @@ class ReplacementController {
         carrier,
         shipped_at,
         estimated_delivery,
+        delivered_at,
         notes
       } = req.body;
 
@@ -226,6 +228,7 @@ class ReplacementController {
         carrier,
         shipped_at,
         estimated_delivery,
+        delivered_at,
         notes
       };
 
@@ -248,7 +251,7 @@ class ReplacementController {
   /**
    * Get replacement analytics
    * GET /api/v1/replacements/analytics
-   * @access Manager
+   * @access Manager/Admin
    */
   async getReplacementAnalytics(req, res) {
     try {
@@ -336,6 +339,63 @@ class ReplacementController {
       res.status(400).json({
         success: false,
         message: error.message || 'Failed to confirm return receipt'
+      });
+    }
+  }
+
+  /**
+   * Cancel replacement request
+   * PUT /api/v1/replacements/:id/cancel
+   * @access Customer (own pending request only)
+   */
+  async cancelReplacement(req, res) {
+    try {
+      const { id } = req.params;
+      const customerId = req.user.id;
+
+      const replacement = await replacementService.getReplacementRequest(id);
+
+      if (!replacement) {
+        return res.status(404).json({
+          success: false,
+          message: 'Replacement request not found'
+        });
+      }
+
+      if (replacement.customer_id !== customerId) {
+        return res.status(403).json({
+          success: false,
+          message: 'Not authorized to cancel this replacement request'
+        });
+      }
+
+      if (replacement.status !== 'pending') {
+        return res.status(400).json({
+          success: false,
+          message: `Cannot cancel a replacement with status: ${replacement.status}`
+        });
+      }
+
+      const supabase = require('../../config/supabase');
+      const { data, error } = await supabase
+        .from('replacement_requests')
+        .update({ status: 'cancelled', updated_at: new Date().toISOString() })
+        .eq('id', id)
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      res.status(200).json({
+        success: true,
+        message: 'Replacement request cancelled',
+        data
+      });
+    } catch (error) {
+      console.error('Error in cancelReplacement controller:', error);
+      res.status(400).json({
+        success: false,
+        message: error.message || 'Failed to cancel replacement request'
       });
     }
   }
