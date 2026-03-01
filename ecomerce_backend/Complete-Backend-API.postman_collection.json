@@ -1,0 +1,5398 @@
+{
+  "info": {
+    "name": "FastShop Complete Backend API - All Phases (1-6)",
+    "description": "Complete API collection for ALL backend features with auto-save tokens and base URL for Admin, Manager, Seller, and Customer roles. Includes 150+ endpoints across all phases.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "version": "6.0.0"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Auto-set base URL if not set",
+          "if (!pm.environment.get('base_url')) {",
+          "    pm.environment.set('base_url', 'http://localhost:5000');",
+          "    console.log('✅ Base URL auto-set to: http://localhost:5000');",
+          "}"
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Global test script for all requests",
+          "if (pm.response.code === 200 || pm.response.code === 201) {",
+          "    console.log('✅ Request successful');",
+          "} else if (pm.response.code === 401) {",
+          "    console.log('⚠️ Unauthorized - Please login first');",
+          "} else if (pm.response.code === 403) {",
+          "    console.log('⚠️ Forbidden - Insufficient permissions');",
+          "}"
+        ]
+      }
+    }
+  ],
+  "item": [
+    {
+      "name": "0. Authentication (All Roles)",
+      "description": "Register and login for all user roles: Customer, Seller, Manager, Admin",
+      "item": [
+        {
+          "name": "Register Customer",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200 || pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    ",
+                  "    // Auto-save token",
+                  "    if (response.token) {",
+                  "        pm.environment.set('customer_token', response.token);",
+                  "        pm.environment.set('token', response.token);",
+                  "        console.log('✅ Token auto-saved as customer_token');",
+                  "    }",
+                  "    ",
+                  "    // Auto-save user",
+                  "    if (response.user) {",
+                  "        const id = response.user.id || response.user;",
+                  "        pm.environment.set('user_id', id);",
+                  "        console.log('✅ user_id auto-saved:', id);",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/register",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"customer@test.com\",\n  \"password\": \"Test123!@#\",\n  \"full_name\": \"Test Customer\",\n  \"role\": \"customer\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Login Customer",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200 || pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    ",
+                  "    // Auto-save token",
+                  "    if (response.token) {",
+                  "        pm.environment.set('customer_token', response.token);",
+                  "        pm.environment.set('token', response.token);",
+                  "        console.log('✅ Token auto-saved as customer_token');",
+                  "    }",
+                  "    ",
+                  "    // Auto-save user",
+                  "    if (response.user) {",
+                  "        const id = response.user.id || response.user;",
+                  "        pm.environment.set('user_id', id);",
+                  "        console.log('✅ user_id auto-saved:', id);",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"customer@test.com\",\n  \"password\": \"Test123!@#\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Register Seller",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200 || pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    ",
+                  "    // Auto-save token",
+                  "    if (response.token) {",
+                  "        pm.environment.set('seller_token', response.token);",
+                  "        pm.environment.set('token', response.token);",
+                  "        console.log('✅ Token auto-saved as seller_token');",
+                  "    }",
+                  "    ",
+                  "    // Auto-save user",
+                  "    if (response.user) {",
+                  "        const id = response.user.id || response.user;",
+                  "        pm.environment.set('user_id', id);",
+                  "        console.log('✅ user_id auto-saved:', id);",
+                  "    }",
+                  "    ",
+                  "    // Auto-save seller",
+                  "    if (response.seller) {",
+                  "        const id = response.seller.id || response.seller;",
+                  "        pm.environment.set('seller_id', id);",
+                  "        console.log('✅ seller_id auto-saved:', id);",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/register/seller",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register",
+                "seller"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"seller@test.com\",\n  \"password\": \"Test123!@#\",\n  \"full_name\": \"Test Seller\",\n  \"business_name\": \"Test Store\",\n  \"business_address\": \"123 Business St\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Login Seller",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200 || pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    ",
+                  "    // Auto-save token",
+                  "    if (response.token) {",
+                  "        pm.environment.set('seller_token', response.token);",
+                  "        pm.environment.set('token', response.token);",
+                  "        console.log('✅ Token auto-saved as seller_token');",
+                  "    }",
+                  "    ",
+                  "    // Auto-save user",
+                  "    if (response.user) {",
+                  "        const id = response.user.id || response.user;",
+                  "        pm.environment.set('user_id', id);",
+                  "        console.log('✅ user_id auto-saved:', id);",
+                  "    }",
+                  "    ",
+                  "    // Auto-save seller",
+                  "    if (response.seller) {",
+                  "        const id = response.seller.id || response.seller;",
+                  "        pm.environment.set('seller_id', id);",
+                  "        console.log('✅ seller_id auto-saved:', id);",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"seller@test.com\",\n  \"password\": \"Test123!@#\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Login Manager",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200 || pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    ",
+                  "    // Auto-save token",
+                  "    if (response.token) {",
+                  "        pm.environment.set('manager_token', response.token);",
+                  "        pm.environment.set('token', response.token);",
+                  "        console.log('✅ Token auto-saved as manager_token');",
+                  "    }",
+                  "    ",
+                  "    // Auto-save user",
+                  "    if (response.user) {",
+                  "        const id = response.user.id || response.user;",
+                  "        pm.environment.set('user_id', id);",
+                  "        console.log('✅ user_id auto-saved:', id);",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"manager@test.com\",\n  \"password\": \"Test123!@#\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Login Admin",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200 || pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    ",
+                  "    // Auto-save token",
+                  "    if (response.token) {",
+                  "        pm.environment.set('admin_token', response.token);",
+                  "        pm.environment.set('token', response.token);",
+                  "        console.log('✅ Token auto-saved as admin_token');",
+                  "    }",
+                  "    ",
+                  "    // Auto-save user",
+                  "    if (response.user) {",
+                  "        const id = response.user.id || response.user;",
+                  "        pm.environment.set('user_id', id);",
+                  "        console.log('✅ user_id auto-saved:', id);",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@test.com\",\n  \"password\": \"Test123!@#\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Current User Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/me",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "me"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/profile",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "profile"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"full_name\": \"Updated Name\",\n  \"phone\": \"+1234567890\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Seller Status",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{seller_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/seller/status",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "seller",
+                "status"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "1. Categories",
+      "description": "Category management endpoints",
+      "item": [
+        {
+          "name": "Get All Categories",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/categories",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "categories"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Category by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/categories/{{category_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "categories",
+                "{{category_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Category (Admin)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200 || pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    ",
+                  "    // Auto-save token",
+                  "    if (response.token) {",
+                  "        pm.environment.set('admin_token', response.token);",
+                  "        pm.environment.set('token', response.token);",
+                  "        console.log('✅ Token auto-saved as admin_token');",
+                  "    }",
+                  "    ",
+                  "    // Auto-save category",
+                  "    if (response.category) {",
+                  "        const id = response.category.id || response.category;",
+                  "        pm.environment.set('category_id', id);",
+                  "        console.log('✅ category_id auto-saved:', id);",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/categories",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "categories"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Electronics\",\n  \"description\": \"Electronic devices and gadgets\",\n  \"image_url\": \"https://example.com/electronics.jpg\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Update Category (Admin)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/categories/{{category_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "categories",
+                "{{category_id}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Electronics Updated\",\n  \"description\": \"Updated description\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Category (Admin)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/categories/{{category_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "categories",
+                "{{category_id}}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Products",
+      "description": "Product browsing and management",
+      "item": [
+        {
+          "name": "Get All Products (Public)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/products",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "products"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Search Products",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/products/search?q=phone&category={{category_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "products",
+                "search?q=phone&category={{category_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Product by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/products/{{product_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "products",
+                "{{product_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Seller Products",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{seller_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/seller/products",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "seller",
+                "products"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Product (Seller)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200 || pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    ",
+                  "    // Auto-save token",
+                  "    if (response.token) {",
+                  "        pm.environment.set('seller_token', response.token);",
+                  "        pm.environment.set('token', response.token);",
+                  "        console.log('✅ Token auto-saved as seller_token');",
+                  "    }",
+                  "    ",
+                  "    // Auto-save product",
+                  "    if (response.product) {",
+                  "        const id = response.product.id || response.product;",
+                  "        pm.environment.set('product_id', id);",
+                  "        console.log('✅ product_id auto-saved:', id);",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{seller_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/seller/products",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "seller",
+                "products"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"iPhone 15 Pro\",\n  \"description\": \"Latest iPhone model with advanced features\",\n  \"price\": 999.99,\n  \"category_id\": \"{{category_id}}\",\n  \"image_url\": \"https://example.com/iphone15.jpg\",\n  \"stock_quantity\": 100\n}"
+            }
+          }
+        },
+        {
+          "name": "Update Product (Seller)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{seller_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/seller/products/{{product_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "seller",
+                "products",
+                "{{product_id}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"iPhone 15 Pro Max\",\n  \"price\": 1099.99\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Product (Seller)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{seller_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/seller/products/{{product_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "seller",
+                "products",
+                "{{product_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Approval Queue (Manager)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{manager_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/manager/products/pending",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "manager",
+                "products",
+                "pending"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Approve Product (Manager)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{manager_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/manager/products/{{product_id}}/approve",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "manager",
+                "products",
+                "{{product_id}}",
+                "approve"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Reject Product (Manager)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{manager_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/manager/products/{{product_id}}/reject",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "manager",
+                "products",
+                "{{product_id}}",
+                "reject"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reason\": \"Product does not meet quality standards\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Product Variants (Phase 6)",
+      "description": "Product variant management system",
+      "item": [
+        {
+          "name": "Create Variant (Seller)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200 || pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    ",
+                  "    // Auto-save token",
+                  "    if (response.token) {",
+                  "        pm.environment.set('seller_token', response.token);",
+                  "        pm.environment.set('token', response.token);",
+                  "        console.log('✅ Token auto-saved as seller_token');",
+                  "    }",
+                  "    ",
+                  "    // Auto-save variant",
+                  "    if (response.variant) {",
+                  "        const id = response.variant.id || response.variant;",
+                  "        pm.environment.set('variant_id', id);",
+                  "        console.log('✅ variant_id auto-saved:', id);",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{seller_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/variants",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "variants"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"product_id\": \"{{product_id}}\",\n  \"sku\": \"IPHONE-15-256-BLUE\",\n  \"variant_name\": \"iPhone 15 Pro 256GB Blue\",\n  \"attributes\": {\n    \"storage\": \"256GB\",\n    \"color\": \"Blue\"\n  },\n  \"price\": 1099.99,\n  \"compare_at_price\": 1199.99,\n  \"images\": [\n    \"https://example.com/iphone-blue-1.jpg\"\n  ]\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Product Variants",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/variants/products/{{product_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "variants",
+                "products",
+                "{{product_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Variant by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/variants/{{variant_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "variants",
+                "{{variant_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Variant (Seller)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{seller_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/variants/{{variant_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "variants",
+                "{{variant_id}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"price\": 1049.99,\n  \"is_available\": true\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Variant (Seller)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{seller_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/variants/{{variant_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "variants",
+                "{{variant_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Variant Inventory",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{seller_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/variants/{{variant_id}}/inventory",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "variants",
+                "{{variant_id}}",
+                "inventory"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Variant Inventory",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{seller_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/variants/{{variant_id}}/inventory",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "variants",
+                "{{variant_id}}",
+                "inventory"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"quantity\": 50,\n  \"low_stock_threshold\": 10\n}"
+            }
+          }
+        },
+        {
+          "name": "Bulk Update Variants",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{seller_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/variants/bulk",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "variants",
+                "bulk"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"variants\": [\n    {\n      \"id\": \"{{variant_id}}\",\n      \"price\": 999.99,\n      \"quantity\": 100\n    }\n  ]\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Shopping Cart",
+      "description": "Shopping cart operations",
+      "item": [
+        {
+          "name": "Get Cart",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customer_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/cart",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "cart"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Cart Summary",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customer_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/cart/summary",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "cart",
+                "summary"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Cart Count",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customer_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/cart/count",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "cart",
+                "count"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Add Item to Cart",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customer_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/cart/items",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "cart",
+                "items"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"product_id\": \"{{product_id}}\",\n  \"variant_id\": \"{{variant_id}}\",\n  \"quantity\": 2\n}"
+            }
+          }
+        },
+        {
+          "name": "Update Cart Item Quantity",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customer_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/cart/items/{{product_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "cart",
+                "items",
+                "{{product_id}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"quantity\": 3\n}"
+            }
+          }
+        },
+        {
+          "name": "Remove Item from Cart",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customer_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/cart/items/{{product_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "cart",
+                "items",
+                "{{product_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Clear Cart",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customer_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/cart",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "cart"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Validate Cart",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customer_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/cart/validate",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "cart",
+                "validate"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Coupons & Promotions (Phase 6)",
+      "description": "Discount and promotion management",
+      "item": [
+        {
+          "name": "Create Coupon (Manager)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200 || pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    ",
+                  "    // Auto-save token",
+                  "    if (response.token) {",
+                  "        pm.environment.set('manager_token', response.token);",
+                  "        pm.environment.set('token', response.token);",
+                  "        console.log('✅ Token auto-saved as manager_token');",
+                  "    }",
+                  "    ",
+                  "    // Auto-save coupon",
+                  "    if (response.coupon) {",
+                  "        const id = response.coupon.id || response.coupon;",
+                  "        pm.environment.set('coupon_id', id);",
+                  "        console.log('✅ coupon_id auto-saved:', id);",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{manager_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/coupons",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "coupons"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"SUMMER2026\",\n  \"discount_type\": \"percentage\",\n  \"discount_value\": 20,\n  \"min_purchase_amount\": 50,\n  \"max_discount_amount\": 100,\n  \"usage_limit\": 1000,\n  \"usage_limit_per_customer\": 1,\n  \"start_date\": \"2026-06-01T00:00:00Z\",\n  \"end_date\": \"2026-08-31T23:59:59Z\",\n  \"applicable_to\": {\n    \"product_ids\": [],\n    \"category_ids\": []\n  },\n  \"allow_stacking\": false\n}"
+            }
+          }
+        },
+        {
+          "name": "Get All Coupons (Manager)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{manager_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/coupons",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "coupons"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Coupon by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{manager_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/coupons/{{coupon_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "coupons",
+                "{{coupon_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Validate Coupon (Customer)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customer_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/coupons/validate",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "coupons",
+                "validate"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"SUMMER2026\",\n  \"order_total\": 150,\n  \"items\": [\n    {\n      \"product_id\": \"{{product_id}}\",\n      \"quantity\": 2,\n      \"price\": 75\n    }\n  ]\n}"
+            }
+          }
+        },
+        {
+          "name": "Apply Coupon (Customer)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customer_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/coupons/apply",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "coupons",
+                "apply"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"SUMMER2026\",\n  \"order_id\": \"{{order_id}}\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Update Coupon (Manager)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{manager_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/coupons/{{coupon_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "coupons",
+                "{{coupon_id}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"discount_value\": 25,\n  \"usage_limit\": 2000\n}"
+            }
+          }
+        },
+        {
+          "name": "Deactivate Coupon (Manager)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{manager_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/coupons/{{coupon_id}}/deactivate",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "coupons",
+                "{{coupon_id}}",
+                "deactivate"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Coupon Analytics (Manager)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{manager_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/coupons/{{coupon_id}}/analytics",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "coupons",
+                "{{coupon_id}}",
+                "analytics"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Promotion (Manager)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200 || pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    ",
+                  "    // Auto-save token",
+                  "    if (response.token) {",
+                  "        pm.environment.set('manager_token', response.token);",
+                  "        pm.environment.set('token', response.token);",
+                  "        console.log('✅ Token auto-saved as manager_token');",
+                  "    }",
+                  "    ",
+                  "    // Auto-save promotion",
+                  "    if (response.promotion) {",
+                  "        const id = response.promotion.id || response.promotion;",
+                  "        pm.environment.set('promotion_id', id);",
+                  "        console.log('✅ promotion_id auto-saved:', id);",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{manager_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/promotions",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "promotions"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"product_id\": \"{{product_id}}\",\n  \"promotional_price\": 799.99,\n  \"start_date\": \"2026-06-01T00:00:00Z\",\n  \"end_date\": \"2026-06-30T23:59:59Z\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Active Promotions",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/promotions/active",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "promotions",
+                "active"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Promotion by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{manager_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/promotions/{{promotion_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "promotions",
+                "{{promotion_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Promotion (Manager)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{manager_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/promotions/{{promotion_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "promotions",
+                "{{promotion_id}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"promotional_price\": 749.99\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Promotion (Manager)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{manager_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/promotions/{{promotion_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "promotions",
+                "{{promotion_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Promotion Analytics (Manager)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{manager_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/promotions/{{promotion_id}}/analytics",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "promotions",
+                "{{promotion_id}}",
+                "analytics"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. Payments",
+      "description": "Payment processing with Stripe",
+      "item": [
+        {
+          "name": "Create Payment Intent",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200 || pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    ",
+                  "    // Auto-save token",
+                  "    if (response.token) {",
+                  "        pm.environment.set('customer_token', response.token);",
+                  "        pm.environment.set('token', response.token);",
+                  "        console.log('✅ Token auto-saved as customer_token');",
+                  "    }",
+                  "    ",
+                  "    // Auto-save paymentIntent",
+                  "    if (response.paymentIntent) {",
+                  "        const id = response.paymentIntent.id || response.paymentIntent;",
+                  "        pm.environment.set('paymentIntent_id', id);",
+                  "        console.log('✅ paymentIntent_id auto-saved:', id);",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customer_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/payments/create-intent",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "payments",
+                "create-intent"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 99999,\n  \"currency\": \"usd\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Payment by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customer_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/payments/{{payment_intent_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "payments",
+                "{{payment_intent_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get All Payments (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/payments",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "payments"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Payment Statistics (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/payments/statistics",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "payments",
+                "statistics"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "7. Orders",
+      "description": "Order creation and management",
+      "item": [
+        {
+          "name": "Create Order from Cart",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200 || pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    ",
+                  "    // Auto-save token",
+                  "    if (response.token) {",
+                  "        pm.environment.set('customer_token', response.token);",
+                  "        pm.environment.set('token', response.token);",
+                  "        console.log('✅ Token auto-saved as customer_token');",
+                  "    }",
+                  "    ",
+                  "    // Auto-save order",
+                  "    if (response.order) {",
+                  "        const id = response.order.id || response.order;",
+                  "        pm.environment.set('order_id', id);",
+                  "        console.log('✅ order_id auto-saved:', id);",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customer_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/orders",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "orders"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"payment_intent_id\": \"{{payment_intent_id}}\",\n  \"shipping_address_id\": \"{{address_id}}\",\n  \"billing_address_id\": \"{{address_id}}\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get My Orders",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customer_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/orders",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "orders"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Order by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customer_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/orders/{{order_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "orders",
+                "{{order_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Cancel Order",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customer_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/orders/{{order_id}}/cancel",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "orders",
+                "{{order_id}}",
+                "cancel"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Invoice",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customer_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/orders/{{order_id}}/invoice",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "orders",
+                "{{order_id}}",
+                "invoice"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Order Refunds",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customer_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/orders/{{order_id}}/refunds",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "orders",
+                "{{order_id}}",
+                "refunds"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Order with Refund Details",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customer_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/orders/{{order_id}}/with-refunds",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "orders",
+                "{{order_id}}",
+                "with-refunds"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Check Refund Eligibility",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customer_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/orders/{{order_id}}/refund-eligibility",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "orders",
+                "{{order_id}}",
+                "refund-eligibility"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get All Orders (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/orders",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "orders"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Order Statistics (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/orders/statistics",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "orders",
+                "statistics"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Recent Orders (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/orders/recent",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "orders",
+                "recent"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Order Status (Admin)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/orders/{{order_id}}/status",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "orders",
+                "{{order_id}}",
+                "status"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"shipped\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "8. Delivery Ratings (Phase 6)",
+      "description": "Delivery rating and feedback system",
+      "item": [
+        {
+          "name": "Submit Delivery Rating (Customer)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200 || pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    ",
+                  "    // Auto-save token",
+                  "    if (response.token) {",
+                  "        pm.environment.set('customer_token', response.token);",
+                  "        pm.environment.set('token', response.token);",
+                  "        console.log('✅ Token auto-saved as customer_token');",
+                  "    }",
+                  "    ",
+                  "    // Auto-save rating",
+                  "    if (response.rating) {",
+                  "        const id = response.rating.id || response.rating;",
+                  "        pm.environment.set('rating_id', id);",
+                  "        console.log('✅ rating_id auto-saved:', id);",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customer_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/delivery-ratings",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "delivery-ratings"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"order_id\": \"{{order_id}}\",\n  \"overall_rating\": 5,\n  \"speed_rating\": 5,\n  \"packaging_rating\": 4,\n  \"communication_rating\": 5,\n  \"overall_feedback\": \"Excellent service!\",\n  \"speed_feedback\": \"Very fast delivery\",\n  \"packaging_feedback\": \"Well packaged\",\n  \"communication_feedback\": \"Great communication\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Order Delivery Rating",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customer_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/delivery-ratings/orders/{{order_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "delivery-ratings",
+                "orders",
+                "{{order_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Seller Delivery Metrics",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{seller_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/delivery-ratings/sellers/{{seller_id}}/metrics",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "delivery-ratings",
+                "sellers",
+                "{{seller_id}}",
+                "metrics"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Seller Rating Distribution",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{seller_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/delivery-ratings/sellers/{{seller_id}}/distribution",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "delivery-ratings",
+                "sellers",
+                "{{seller_id}}",
+                "distribution"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Delivery Rating Analytics (Manager)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{manager_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/delivery-ratings/analytics",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "delivery-ratings",
+                "analytics"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Flagged Ratings (Manager)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{manager_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/delivery-ratings/flagged",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "delivery-ratings",
+                "flagged"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "9. Replacements (Phase 6)",
+      "description": "Product replacement request system",
+      "item": [
+        {
+          "name": "Create Replacement Request (Customer)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200 || pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    ",
+                  "    // Auto-save token",
+                  "    if (response.token) {",
+                  "        pm.environment.set('customer_token', response.token);",
+                  "        pm.environment.set('token', response.token);",
+                  "        console.log('✅ Token auto-saved as customer_token');",
+                  "    }",
+                  "    ",
+                  "    // Auto-save replacement",
+                  "    if (response.replacement) {",
+                  "        const id = response.replacement.id || response.replacement;",
+                  "        pm.environment.set('replacement_id', id);",
+                  "        console.log('✅ replacement_id auto-saved:', id);",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customer_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/replacements",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "replacements"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"order_id\": \"{{order_id}}\",\n  \"product_id\": \"{{product_id}}\",\n  \"variant_id\": \"{{variant_id}}\",\n  \"quantity\": 1,\n  \"reason\": \"defective_product\",\n  \"description\": \"Product arrived damaged\",\n  \"images\": [\n    \"https://example.com/damage1.jpg\"\n  ]\n}"
+            }
+          }
+        },
+        {
+          "name": "Get My Replacement Requests (Customer)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customer_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/replacements/my-requests",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "replacements",
+                "my-requests"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Replacement by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customer_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/replacements/{{replacement_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "replacements",
+                "{{replacement_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get All Replacements (Manager)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{manager_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/replacements",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "replacements"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Approve Replacement (Manager)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{manager_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/replacements/{{replacement_id}}/approve",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "replacements",
+                "{{replacement_id}}",
+                "approve"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Reject Replacement (Manager)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{manager_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/replacements/{{replacement_id}}/reject",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "replacements",
+                "{{replacement_id}}",
+                "reject"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reason\": \"Product shows signs of misuse\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Update Replacement Shipment (Seller)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{seller_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/replacements/{{replacement_id}}/shipment",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "replacements",
+                "{{replacement_id}}",
+                "shipment"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tracking_number\": \"TRACK123456\",\n  \"carrier\": \"FedEx\",\n  \"estimated_delivery\": \"2026-02-15T00:00:00Z\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Mark Replacement Delivered (Seller)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{seller_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/replacements/{{replacement_id}}/delivered",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "replacements",
+                "{{replacement_id}}",
+                "delivered"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Replacement Analytics (Manager)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{manager_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/replacements/analytics",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "replacements",
+                "analytics"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "10. Enhanced Refunds (Phase 6)",
+      "description": "Advanced refund processing system",
+      "item": [
+        {
+          "name": "Create Refund Request (Customer)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200 || pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    ",
+                  "    // Auto-save token",
+                  "    if (response.token) {",
+                  "        pm.environment.set('customer_token', response.token);",
+                  "        pm.environment.set('token', response.token);",
+                  "        console.log('✅ Token auto-saved as customer_token');",
+                  "    }",
+                  "    ",
+                  "    // Auto-save refund",
+                  "    if (response.refund) {",
+                  "        const id = response.refund.id || response.refund;",
+                  "        pm.environment.set('refund_id', id);",
+                  "        console.log('✅ refund_id auto-saved:', id);",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customer_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/refunds",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "refunds"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"order_id\": \"{{order_id}}\",\n  \"refund_type\": \"partial\",\n  \"refund_amount\": 50,\n  \"reason\": \"product_quality\",\n  \"description\": \"Product not as described\",\n  \"images\": [\n    \"https://example.com/issue1.jpg\"\n  ]\n}"
+            }
+          }
+        },
+        {
+          "name": "Get My Refund Requests (Customer)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customer_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/refunds/my-requests",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "refunds",
+                "my-requests"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Refund by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customer_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/refunds/{{refund_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "refunds",
+                "{{refund_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get All Refunds (Manager)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{manager_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/refunds",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "refunds"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Process Partial Refund (Manager)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{manager_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/refunds/{{refund_id}}/process-partial",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "refunds",
+                "{{refund_id}}",
+                "process-partial"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refund_amount\": 50,\n  \"reason\": \"Approved - product quality issue\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Process Full Refund (Manager)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{manager_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/refunds/{{refund_id}}/process-full",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "refunds",
+                "{{refund_id}}",
+                "process-full"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reason\": \"Approved - full refund requested\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Issue Goodwill Refund (Manager)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{manager_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/refunds/goodwill",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "refunds",
+                "goodwill"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"order_id\": \"{{order_id}}\",\n  \"amount\": 25,\n  \"reason\": \"Compensation for delayed delivery\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Refund Analytics (Manager)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{manager_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/refunds/analytics",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "refunds",
+                "analytics"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Refund Trends (Manager)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{manager_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/refunds/analytics/trends",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "refunds",
+                "analytics",
+                "trends"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "11. Reviews",
+      "description": "Product review system",
+      "item": [
+        {
+          "name": "Create Review (Customer)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200 || pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    ",
+                  "    // Auto-save token",
+                  "    if (response.token) {",
+                  "        pm.environment.set('customer_token', response.token);",
+                  "        pm.environment.set('token', response.token);",
+                  "        console.log('✅ Token auto-saved as customer_token');",
+                  "    }",
+                  "    ",
+                  "    // Auto-save review",
+                  "    if (response.review) {",
+                  "        const id = response.review.id || response.review;",
+                  "        pm.environment.set('review_id', id);",
+                  "        console.log('✅ review_id auto-saved:', id);",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customer_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/reviews",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "reviews"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"product_id\": \"{{product_id}}\",\n  \"order_id\": \"{{order_id}}\",\n  \"rating\": 5,\n  \"title\": \"Excellent Product!\",\n  \"comment\": \"Great quality and fast shipping\",\n  \"images\": [\n    \"https://example.com/review1.jpg\"\n  ]\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Product Reviews",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/products/{{product_id}}/reviews",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "products",
+                "{{product_id}}",
+                "reviews"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get My Reviews (Customer)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customer_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/reviews/my-reviews",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "reviews",
+                "my-reviews"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Review (Customer)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customer_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/reviews/{{review_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "reviews",
+                "{{review_id}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"rating\": 4,\n  \"title\": \"Good Product\",\n  \"comment\": \"Updated review\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Review (Customer)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customer_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/reviews/{{review_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "reviews",
+                "{{review_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Pending Reviews (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/reviews/pending",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "reviews",
+                "pending"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Approve Review (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/reviews/{{review_id}}/approve",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "reviews",
+                "{{review_id}}",
+                "approve"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Reject Review (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/reviews/{{review_id}}/reject",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "reviews",
+                "{{review_id}}",
+                "reject"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reason\": \"Inappropriate content\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "12. Addresses",
+      "description": "User address management",
+      "item": [
+        {
+          "name": "Create Address",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200 || pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    ",
+                  "    // Auto-save token",
+                  "    if (response.token) {",
+                  "        pm.environment.set('customer_token', response.token);",
+                  "        pm.environment.set('token', response.token);",
+                  "        console.log('✅ Token auto-saved as customer_token');",
+                  "    }",
+                  "    ",
+                  "    // Auto-save address",
+                  "    if (response.address) {",
+                  "        const id = response.address.id || response.address;",
+                  "        pm.environment.set('address_id', id);",
+                  "        console.log('✅ address_id auto-saved:', id);",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customer_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/addresses",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "addresses"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"address_line1\": \"123 Main St\",\n  \"address_line2\": \"Apt 4B\",\n  \"city\": \"New York\",\n  \"state\": \"NY\",\n  \"postal_code\": \"10001\",\n  \"country\": \"USA\",\n  \"is_default\": true\n}"
+            }
+          }
+        },
+        {
+          "name": "Get My Addresses",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customer_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/addresses",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "addresses"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Address by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customer_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/addresses/{{address_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "addresses",
+                "{{address_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Address",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customer_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/addresses/{{address_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "addresses",
+                "{{address_id}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"address_line1\": \"456 Oak Ave\",\n  \"city\": \"Brooklyn\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Address",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customer_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/addresses/{{address_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "addresses",
+                "{{address_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Set Default Address",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customer_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/addresses/{{address_id}}/default",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "addresses",
+                "{{address_id}}",
+                "default"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "13. Inventory (Admin)",
+      "description": "Inventory management",
+      "item": [
+        {
+          "name": "Get All Inventory",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/inventory",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "inventory"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Product Inventory",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/inventory/{{product_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "inventory",
+                "{{product_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Inventory",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/inventory/{{product_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "inventory",
+                "{{product_id}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"quantity\": 150,\n  \"low_stock_threshold\": 20\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Low Stock Products",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/inventory/low-stock",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "inventory",
+                "low-stock"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Inventory History",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/inventory/{{product_id}}/history",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "inventory",
+                "{{product_id}}",
+                "history"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "14. Analytics (Admin/Manager)",
+      "description": "Business analytics and reports",
+      "item": [
+        {
+          "name": "Get Dashboard Analytics",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/analytics/dashboard",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "analytics",
+                "dashboard"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Sales Overview",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/analytics/sales/overview",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "analytics",
+                "sales",
+                "overview"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Revenue Analytics",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/analytics/revenue",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "analytics",
+                "revenue"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Product Performance",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/analytics/products/performance",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "analytics",
+                "products",
+                "performance"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Customer Analytics",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/analytics/customers",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "analytics",
+                "customers"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Feature Analytics (Manager)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{manager_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/analytics/features",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "analytics",
+                "features"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "15. Users (Admin)",
+      "description": "User management",
+      "item": [
+        {
+          "name": "Get All Users",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/users",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "users"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get User by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/users/{{user_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "users",
+                "{{user_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update User Role",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/users/{{user_id}}/role",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "users",
+                "{{user_id}}",
+                "role"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"role\": \"manager\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Deactivate User",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/users/{{user_id}}/deactivate",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "users",
+                "{{user_id}}",
+                "deactivate"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Activate User",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/users/{{user_id}}/activate",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "users",
+                "{{user_id}}",
+                "activate"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete User",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/users/{{user_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "users",
+                "{{user_id}}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "16. Sellers (Phase 5)",
+      "description": "Seller management and verification",
+      "item": [
+        {
+          "name": "Get All Sellers (Manager)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{manager_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/manager/sellers",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "manager",
+                "sellers"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Seller by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{manager_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/sellers/{{seller_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "sellers",
+                "{{seller_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Pending Sellers (Manager)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{manager_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/manager/sellers/pending",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "manager",
+                "sellers",
+                "pending"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Verify Seller (Manager)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{manager_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/manager/sellers/{{seller_id}}/verify",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "manager",
+                "sellers",
+                "{{seller_id}}",
+                "verify"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Reject Seller (Manager)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{manager_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/manager/sellers/{{seller_id}}/reject",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "manager",
+                "sellers",
+                "{{seller_id}}",
+                "reject"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reason\": \"Incomplete documentation\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Seller Performance",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{seller_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/sellers/{{seller_id}}/performance",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "sellers",
+                "{{seller_id}}",
+                "performance"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "17. Notifications (Phase 5)",
+      "description": "User notification system",
+      "item": [
+        {
+          "name": "Get My Notifications",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/notifications",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "notifications"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Unread Notifications",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/notifications/unread",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "notifications",
+                "unread"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Mark Notification as Read",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/notifications/{{notification_id}}/read",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "notifications",
+                "{{notification_id}}",
+                "read"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Mark All as Read",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/notifications/mark-all-read",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "notifications",
+                "mark-all-read"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Notification",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/notifications/{{notification_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "notifications",
+                "{{notification_id}}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "18. Disputes (Phase 5)",
+      "description": "Order dispute management",
+      "item": [
+        {
+          "name": "Create Dispute (Customer)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200 || pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    ",
+                  "    // Auto-save token",
+                  "    if (response.token) {",
+                  "        pm.environment.set('customer_token', response.token);",
+                  "        pm.environment.set('token', response.token);",
+                  "        console.log('✅ Token auto-saved as customer_token');",
+                  "    }",
+                  "    ",
+                  "    // Auto-save dispute",
+                  "    if (response.dispute) {",
+                  "        const id = response.dispute.id || response.dispute;",
+                  "        pm.environment.set('dispute_id', id);",
+                  "        console.log('✅ dispute_id auto-saved:', id);",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customer_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/disputes",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "disputes"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"order_id\": \"{{order_id}}\",\n  \"reason\": \"product_not_received\",\n  \"description\": \"Order never arrived\",\n  \"evidence\": [\n    \"https://example.com/evidence1.jpg\"\n  ]\n}"
+            }
+          }
+        },
+        {
+          "name": "Get My Disputes (Customer)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customer_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/disputes/my-disputes",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "disputes",
+                "my-disputes"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Dispute by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customer_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/disputes/{{dispute_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "disputes",
+                "{{dispute_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get All Disputes (Manager)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{manager_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/manager/disputes",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "manager",
+                "disputes"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Resolve Dispute (Manager)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{manager_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/manager/disputes/{{dispute_id}}/resolve",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "manager",
+                "disputes",
+                "{{dispute_id}}",
+                "resolve"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"resolution\": \"Refund issued to customer\",\n  \"outcome\": \"customer_favor\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Add Dispute Message",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customer_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/disputes/{{dispute_id}}/messages",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "disputes",
+                "{{dispute_id}}",
+                "messages"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"message\": \"Additional information provided\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "19. Commissions (Phase 4)",
+      "description": "Commission management for multi-vendor",
+      "item": [
+        {
+          "name": "Get Commission Settings (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/commissions/settings",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "commissions",
+                "settings"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Commission Settings (Admin)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/commissions/settings",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "commissions",
+                "settings"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"default_rate\": 15,\n  \"category_rates\": {\n    \"electronics\": 10,\n    \"clothing\": 20\n  }\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Seller Commissions",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{seller_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/sellers/{{seller_id}}/commissions",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "sellers",
+                "{{seller_id}}",
+                "commissions"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Commission Report (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/commissions/report",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "commissions",
+                "report"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "20. Seller Balance (Phase 4)",
+      "description": "Seller balance and payout management",
+      "item": [
+        {
+          "name": "Get My Balance (Seller)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{seller_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/sellers/balance",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "sellers",
+                "balance"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Balance History (Seller)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{seller_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/sellers/balance/history",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "sellers",
+                "balance",
+                "history"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Request Payout (Seller)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{seller_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/sellers/balance/payout",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "sellers",
+                "balance",
+                "payout"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 1000,\n  \"payout_method\": \"bank_transfer\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Payout Requests (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/payouts",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "payouts"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Process Payout (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/payouts/{{payout_id}}/process",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "payouts",
+                "{{payout_id}}",
+                "process"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "21. Sub-Orders (Phase 4)",
+      "description": "Multi-vendor sub-order management",
+      "item": [
+        {
+          "name": "Get Order Sub-Orders",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customer_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/orders/{{order_id}}/sub-orders",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "orders",
+                "{{order_id}}",
+                "sub-orders"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Seller Sub-Orders",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{seller_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/sellers/sub-orders",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "sellers",
+                "sub-orders"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Sub-Order Status (Seller)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{seller_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/sellers/sub-orders/{{sub_order_id}}/status",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "sellers",
+                "sub-orders",
+                "{{sub_order_id}}",
+                "status"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"shipped\",\n  \"tracking_number\": \"TRACK123456\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "22. Audit Logs (Admin)",
+      "description": "System audit trail",
+      "item": [
+        {
+          "name": "Get Audit Logs",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/audit-logs",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "audit-logs"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get User Audit Logs",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/audit-logs/users/{{user_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "audit-logs",
+                "users",
+                "{{user_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Entity Audit Logs",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "string"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/audit-logs/entity/orders/{{order_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "audit-logs",
+                "entity",
+                "orders",
+                "{{order_id}}"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:5000",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "admin_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "manager_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "seller_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "customer_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "product_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "order_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "category_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "variant_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "coupon_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "promotion_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "rating_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "replacement_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "refund_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "review_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "address_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "payment_intent_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "user_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "seller_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "notification_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "dispute_id",
+      "value": "",
+      "type": "string"
+    }
+  ]
+}

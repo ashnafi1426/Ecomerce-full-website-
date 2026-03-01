@@ -1,0 +1,24 @@
+{
+  "watch": [
+    "server.js",
+    "app.js",
+    "routes/",
+    "controllers/",
+    "services/",
+    "middlewares/",
+    "config/",
+    "socket/"
+  ],
+  "ext": "js,json",
+  "ignore": [
+    "node_modules/",
+    "test/",
+    "*.test.js",
+    "logs/",
+    "uploads/"
+  ],
+  "env": {
+    "NODE_ENV": "development"
+  },
+  "delay": "1000"
+}

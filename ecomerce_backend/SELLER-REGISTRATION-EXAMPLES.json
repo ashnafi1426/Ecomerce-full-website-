@@ -1,0 +1,109 @@
+{
+  "info": {
+    "name": "Seller Registration - Corrected Examples",
+    "description": "Correct examples for seller registration with proper field names",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Register Seller (Minimal)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"seller1@test.com\",\n  \"password\": \"Test123!@#\",\n  \"businessName\": \"Test Store\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/auth/register/seller",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "auth", "register", "seller"]
+        },
+        "description": "Minimal seller registration with only required fields"
+      },
+      "response": []
+    },
+    {
+      "name": "Register Seller (Complete)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"seller2@test.com\",\n  \"password\": \"Test123!@#\",\n  \"displayName\": \"Test Seller\",\n  \"businessName\": \"Test Store\",\n  \"phone\": \"+1234567890\",\n  \"businessInfo\": {\n    \"description\": \"My test store selling quality products\",\n    \"email\": \"business@test.com\",\n    \"phone\": \"+1234567890\",\n    \"address\": \"123 Business St, City, State 12345\",\n    \"taxId\": \"TAX123456\"\n  }\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/auth/register/seller",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "auth", "register", "seller"]
+        },
+        "description": "Complete seller registration with all optional fields"
+      },
+      "response": []
+    },
+    {
+      "name": "Login Seller",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"seller1@test.com\",\n  \"password\": \"Test123!@#\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/auth/login",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "auth", "login"]
+        },
+        "description": "Login as seller (same endpoint as all roles)"
+      },
+      "response": []
+    },
+    {
+      "name": "Check Seller Status",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{sellerToken}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/auth/seller/status",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "auth", "seller", "status"]
+        },
+        "description": "Check seller verification status (requires authentication)"
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000",
+      "type": "string"
+    },
+    {
+      "key": "sellerToken",
+      "value": "",
+      "type": "string"
+    }
+  ]
+}

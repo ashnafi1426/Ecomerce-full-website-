@@ -1,0 +1,274 @@
+/* =========================================================
+   PROJECT: FastShop Chat Module
+   STACK: React + Framer Motion
+   TASK: Modern responsive chat app CSS
+   GOAL: All messages, buttons, input, actions fully visible
+   ========================================================= */
+
+/* =========================================================
+   STEP 1 — GLOBAL RESET
+   ========================================================= */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* =========================================================
+   STEP 2 — CHAT APP MAIN CONTAINER
+   ========================================================= */
+.telegram-chat-window {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 840px;
+  height: 100vh;
+  background: #f5f5f5;
+  position: fixed;
+  top: 80px;
+  right: 0;
+  height: calc(100vh - 80px);
+  overflow: hidden;
+  z-index: 40;
+  border-radius: 16px 0 0 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-right: none;
+  margin: 0;
+}
+
+/* =========================================================
+   STEP 3 — CHAT HEADER
+   ========================================================= */
+.telegram-chat-header {
+  height: 60px;
+  background: #ffffff;
+  border-bottom: 1px solid #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: linear-gradient(135deg, #5288c1 0%, #4a7db8 100%);
+}
+
+.telegram-header-title {
+  font-weight: bold;
+  font-size: 18px;
+  color: #ffffff;
+  margin: 0;
+}
+
+.telegram-icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: transparent;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.telegram-icon-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* =========================================================
+   STEP 4 — CHAT MESSAGES AREA
+   ========================================================= */
+.telegram-chat-content {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  scroll-behavior: smooth;
+  background: #f5f7fb;
+}
+
+/* =========================================================
+   STEP 5 — SCROLLBAR STYLE
+   ========================================================= */
+.telegram-chat-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.telegram-chat-content::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 3px;
+}
+
+.telegram-chat-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* =========================================================
+   STEP 6 — CHAT INPUT AREA
+   ========================================================= */
+.telegram-input-container {
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+  background: #ffffff;
+  border-top: 1px solid #ddd;
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+  gap: 8px;
+}
+
+.telegram-input-field {
+  flex: 1;
+  padding: 10px 14px;
+  border-radius: 20px;
+  border: 1px solid #ccc;
+  outline: none;
+  background: #f5f7fb;
+  font-size: 14px;
+  font-family: inherit;
+  color: #222222;
+}
+
+.telegram-input-field:focus {
+  border-color: #ff9900;
+  box-shadow: 0 0 5px rgba(255, 153, 0, 0.4);
+}
+
+.telegram-send-btn {
+  background: #ff9900;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 16px;
+  color: #fff;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+}
+
+.telegram-send-btn:hover {
+  transform: scale(1.1);
+  background: #e68a00;
+}
+
+/* =========================================================
+   STEP 7 — ACTION BUTTONS (EMOJI, ATTACH)
+   ========================================================= */
+.chat-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.chat-actions button {
+  background: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 50%;
+  padding: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chat-actions button:hover {
+  background: #ffd814;
+}
+
+/* =========================================================
+   STEP 8 — MESSAGE ACTIONS TRIGGER (THREE-DOT BUTTON)
+   ========================================================= */
+.message-actions-trigger {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.message-actions-trigger:hover {
+  background: #f3f4f6 !important;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15) !important;
+  transform: scale(1.05);
+}
+
+.message-actions-trigger:active {
+  transform: scale(0.95);
+}
+
+/* =========================================================
+   STEP 9 — RESPONSIVE DESIGN
+   ========================================================= */
+@media (max-width: 768px) {
+  .telegram-chat-window {
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    max-width: 100%;
+    height: 100vh;
+    border-radius: 0;
+    margin: 0;
+  }
+
+  .telegram-chat-content {
+    padding: 12px;
+    gap: 10px;
+  }
+
+  .telegram-input-container {
+    padding: 8px 12px;
+  }
+
+  .telegram-send-btn {
+    padding: 8px 12px;
+  }
+}
+
+/* =========================================================
+   STEP 10 — FRAMER MOTION ANIMATIONS
+   ========================================================= */
+.message-enter {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.message-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: all 0.3s ease;
+}
+
+.message-exit {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.message-exit-active {
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: all 0.3s ease;
+}
+
+/* =========================================================
+   EXPECTED RESULT
+   ========================================================= */
+/* ✔ All chat buttons visible and clickable */
+/* ✔ Messages fully visible and scrollable */
+/* ✔ Sticky input always at bottom */
+/* ✔ Smooth hover effects */
+/* ✔ Responsive layout for mobile & desktop */
+/* ✔ Ready for Framer Motion animations */
+/* ✔ Production-ready CSS */
+/* ========================================================= */

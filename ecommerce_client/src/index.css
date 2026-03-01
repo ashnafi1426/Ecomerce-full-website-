@@ -1,0 +1,335 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --amazon-orange: #FF9900;
+  --amazon-dark: #131921;
+  --amazon-light: #232F3E;
+  --amazon-blue: #146EB4;
+}
+
+/* ========================================
+   AMAZON-STYLE FULL-WIDTH LAYOUT
+   ======================================== */
+
+html, body {
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100% !important;
+  overflow-x: hidden !important;
+  font-family: 'Amazon Ember', Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box !important;
+}
+
+/* Remove any default container max-width */
+#root {
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Force all main containers to be full-width */
+main {
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  max-width: none !important;
+}
+
+/* Override Tailwind container */
+.container {
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  max-width: none !important;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Line clamp utility */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ========================================
+   RESPONSIVE DESIGN UTILITIES
+   ======================================== */
+
+/* Amazon-Style Section Structure */
+.amazon-section {
+  width: 100%;
+  padding: 40px 0;
+  background-color: #FFFFFF;
+}
+
+.amazon-section-content {
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+@media (min-width: 768px) {
+  .amazon-section-content {
+    padding: 0 40px;
+  }
+}
+
+/* Responsive Container - Updated for full-width */
+.responsive-container {
+  width: 100%;
+  padding: 0 16px;
+  max-width: 1500px;
+  margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+  .responsive-container {
+    padding: 0 40px;
+  }
+}
+
+/* Responsive Grid Layouts */
+.responsive-grid {
+  @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6;
+}
+
+.responsive-grid-2 {
+  @apply grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6;
+}
+
+.responsive-grid-3 {
+  @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6;
+}
+
+/* Responsive Card */
+.responsive-card {
+  @apply p-4 sm:p-6 lg:p-8 rounded-lg shadow-md bg-white;
+}
+
+.responsive-card-compact {
+  @apply p-3 sm:p-4 lg:p-6 rounded-lg shadow bg-white;
+}
+
+/* Responsive Typography */
+.responsive-heading-xl {
+  @apply text-3xl sm:text-4xl lg:text-5xl font-bold;
+}
+
+.responsive-heading-lg {
+  @apply text-2xl sm:text-3xl lg:text-4xl font-bold;
+}
+
+.responsive-heading-md {
+  @apply text-xl sm:text-2xl lg:text-3xl font-semibold;
+}
+
+.responsive-heading-sm {
+  @apply text-lg sm:text-xl lg:text-2xl font-semibold;
+}
+
+.responsive-body-lg {
+  @apply text-base sm:text-lg lg:text-xl;
+}
+
+.responsive-body {
+  @apply text-sm sm:text-base lg:text-lg;
+}
+
+.responsive-body-sm {
+  @apply text-xs sm:text-sm lg:text-base;
+}
+
+/* Responsive Spacing */
+.responsive-spacing {
+  @apply space-y-4 sm:space-y-6 lg:space-y-8;
+}
+
+.responsive-gap {
+  @apply gap-4 sm:gap-6 lg:gap-8;
+}
+
+.responsive-padding {
+  @apply p-4 sm:p-6 lg:p-8;
+}
+
+.responsive-padding-x {
+  @apply px-4 sm:px-6 lg:px-8;
+}
+
+.responsive-padding-y {
+  @apply py-4 sm:py-6 lg:py-8;
+}
+
+.responsive-margin {
+  @apply m-4 sm:m-6 lg:m-8;
+}
+
+/* Responsive Buttons */
+.responsive-btn {
+  @apply px-4 py-2 text-sm sm:px-6 sm:py-3 sm:text-base rounded transition-colors;
+}
+
+.responsive-btn-sm {
+  @apply px-3 py-1.5 text-xs sm:px-4 sm:py-2 sm:text-sm rounded transition-colors;
+}
+
+.responsive-btn-lg {
+  @apply px-6 py-3 text-base sm:px-8 sm:py-4 sm:text-lg rounded transition-colors;
+}
+
+/* Responsive Table Wrapper */
+.responsive-table {
+  @apply overflow-x-auto -mx-4 sm:mx-0;
+}
+
+.responsive-table table {
+  @apply min-w-full text-sm sm:text-base;
+}
+
+/* Responsive Form Elements */
+.responsive-input {
+  @apply w-full px-3 py-2 text-sm sm:px-4 sm:py-2.5 sm:text-base border rounded focus:outline-none focus:ring-2;
+}
+
+.responsive-select {
+  @apply w-full px-3 py-2 text-sm sm:px-4 sm:py-2.5 sm:text-base border rounded focus:outline-none focus:ring-2;
+}
+
+.responsive-textarea {
+  @apply w-full px-3 py-2 text-sm sm:px-4 sm:py-2.5 sm:text-base border rounded focus:outline-none focus:ring-2 min-h-[100px] sm:min-h-[120px];
+}
+
+/* Responsive Flex Layouts */
+.responsive-flex-col {
+  @apply flex flex-col lg:flex-row gap-4 sm:gap-6;
+}
+
+.responsive-flex-row {
+  @apply flex flex-col sm:flex-row gap-4 sm:gap-6;
+}
+
+/* Responsive Images */
+.responsive-img {
+  @apply w-full h-auto object-cover;
+}
+
+.responsive-img-square {
+  @apply w-full aspect-square object-cover;
+}
+
+.responsive-img-icon {
+  @apply w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12;
+}
+
+/* Responsive Dashboard Layout */
+.responsive-dashboard {
+  @apply grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-6;
+}
+
+.responsive-dashboard-main {
+  @apply lg:col-span-3;
+}
+
+.responsive-dashboard-sidebar {
+  @apply lg:col-span-1;
+}
+
+/* Responsive Stats Grid */
+.responsive-stats {
+  @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6;
+}
+
+/* Responsive Modal */
+.responsive-modal {
+  @apply w-full max-w-sm sm:max-w-md lg:max-w-lg xl:max-w-xl mx-4 sm:mx-auto;
+}
+
+/* Responsive Sidebar */
+.responsive-sidebar {
+  @apply w-full lg:w-64 xl:w-72;
+}
+
+/* Mobile-specific utilities */
+@media (max-width: 640px) {
+  .mobile-full-width {
+    width: 100vw;
+    margin-left: -1rem;
+    margin-right: -1rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  .mobile-hide {
+    display: none !important;
+  }
+  
+  .mobile-stack {
+    flex-direction: column !important;
+  }
+}
+
+/* Tablet-specific utilities */
+@media (min-width: 641px) and (max-width: 1023px) {
+  .tablet-hide {
+    display: none !important;
+  }
+}
+
+/* Desktop-specific utilities */
+@media (min-width: 1024px) {
+  .desktop-hide {
+    display: none !important;
+  }
+}
+
+/* Touch-friendly tap targets (minimum 44x44px) */
+.tap-target {
+  @apply min-h-[44px] min-w-[44px] flex items-center justify-center;
+}
+
+/* Responsive Navigation */
+.responsive-nav {
+  @apply flex flex-col lg:flex-row items-start lg:items-center gap-2 lg:gap-6;
+}
+
+/* Responsive Product Grid */
+.responsive-product-grid {
+  @apply grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4 lg:gap-6;
+}
+
+/* Responsive Search Bar */
+.responsive-search {
+  @apply w-full max-w-full lg:max-w-2xl;
+}
