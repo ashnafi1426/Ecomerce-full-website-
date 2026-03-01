@@ -115,4 +115,16 @@ router.put(
   replacementController.confirmReturnReceived
 );
 
+/**
+ * @route   PUT /api/v1/replacements/:id/cancel
+ * @desc    Cancel replacement request (pending only)
+ * @access  Customer
+ */
+router.put(
+  '/:id/cancel',
+  authenticate,
+  roleMiddleware.requireRole('customer'),
+  replacementController.cancelReplacement
+);
+
 module.exports = router;
